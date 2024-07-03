@@ -1,78 +1,53 @@
-# 출산양육지원사업안내 페이지 크롤러
-def ydp_1page_crawler(url):
+# 아동수당 지원사업 안내 페이지 크롤러
+def ydp_5page_crawler(url):
     # 정보 담을 리스트 초기화
     admin_list = []         # 관리자 ID
     category_list = []      # 카테고리 (분야)
     host_list = []          # 주최 (국가/구)
     title_list = []         # 지원사업명 (제목)
+    field_list = []         # 지원대상
     content_list = []       # 내용
     original_url_list = []  # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
+    field_text = ""         # 지원대상 텍스트
+    way_text = ""           # 신청방법 텍스트
+    content_text = ""       # 내용 텍스트
 
     # URL로부터 페이지 내용 가져오기
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    # h3 태그와 그 다음 ul.bu 태그를 차례로 선택하여 정보 추출
-    h3_tags = soup.select('#contents > h3')
-    for index, h3_tag in enumerate(h3_tags):
-        try:
-            # 제목 추출
-            title = h3_tag.text.strip()
-            title_list.append(title)
+    # 제목 추가
+    title_text = soup.select('#colgroup > article > header > div.sub_title > h2')[0].text.strip()
+    title_list.append(title_text)
 
-            # 해당 제목 다음에 나오는 ul.bu 태그 선택
-            next_ul = h3_tag.find_next_sibling('ul', class_='bu')
-            if next_ul:
-                li_tags = next_ul.find_all('li')
-                way_text = ""  # 신청방법 텍스트
-                etc_text = ""  # 문의처 텍스트
-                content_text = ""   # 내용 텍스트
-                for li in li_tags:
-                    text = li.text.strip()
-                    if '신청방법' in text:
-                        way_text = text.split(': ', 1)[1] if ': ' in text else 'N/A'  # ":" 이후의 텍스트만 가져오기
-                    elif '문의' in text:
-                        etc_text = text.split(': ', 1)[1] if ': ' in text else 'N/A'  # ":" 이후의 텍스트만 가져오기
-                    else:
-                        content_text += text + "\n"
+    # 지원대상 추가
+    field_text = soup.select('#contents > ul:nth-child(2)')[0].text.strip()
+    field_list.append(field_text)
 
-                # 신청방법 및 문의처, 내용 추가
-                way_list.append(way_text.strip())
-                etc_list.append(etc_text.strip())
-                content_list.append(content_text.strip())
-            else:
-                way_list.append('N/A')
-                etc_list.append('N/A')
-                content_list.append('N/A')
+    # 내용 추가
+    content_text += soup.select('#contents > p:nth-child(6)')[0].text.strip()
+    content_text += soup.select('#contents > p:nth-child(8)')[0].text.strip()
+    content_list.append(content_text)
 
-            # 주최 (국가/구) 및 카테고리 (분야) 추출
-            content_ul = h3_tag.find_next_sibling('ul')
-            if content_ul:
-                text = content_ul.text.strip()
-                if text.find('영등포') != -1:
-                    host = 1156000000  # 영등포구 행정코드
-                else:
-                    host = 9000000009  # 정부 행정코드
-                host_list.append(host)
+    # 신청방법 추가
+    way_text = soup.select('#contents > ul:nth-child(4)')[0].text.strip()
+    way_list.append(way_text)
 
-                if text.find('산모') != -1:
-                    category = 1  # 임신/출산
-                else:
-                    category = 2  # 영유아
-                category_list.append(category)
-            else:
-                host_list.append('n/a')
-                category_list.append('n/a')
+    # 문의처 추가
+    etc_text = soup.select('#contents > p:nth-child(10)')[0].text.strip()
+    etc_list.append(etc_text)
 
-            # 관리자 ID와 원본 URL 추가
-            admin_id = 'teamwemmy@gmail.com'
-            admin_list.append(admin_id)
-            original_url_list.append(url)
+    # 주최 및 분야, 관리자 ID, 원본 URL 추가
+    admin_id = 'teamwemmy@gmail.com'
+    admin_list.append(admin_id)
+    original_url_list.append(url)
+    host = 9000000009  # 정부 행정코드
+    host_list.append(host)
+    category = 2  # 영유아
+    category_list.append(category)
 
-        except Exception as e:
-            print(f"Error occurred while processing title {index + 1}: {e}")
 
     # 데이터 프레임 생성
     df = pd.DataFrame({
@@ -80,6 +55,7 @@ def ydp_1page_crawler(url):
         'w_category_id': category_list,
         'host_id': host_list,
         'title': title_list,
+        'field': field_list,
         'content': content_list,
         'way': way_list,
         'etc': etc_list,
@@ -94,18 +70,19 @@ def ydp_1page_crawler(url):
 
     return df
 
-
-# 보육료 지원 안내 페이지 크롤러
-def ydp_2page_crawler(url):
+# 다둥이 행복카드 안내 페이지 크롤러
+def ydp_4page_crawler(url):
     # 정보 담을 리스트 초기화
     admin_list = []         # 관리자 ID
     category_list = []      # 카테고리 (분야)
     host_list = []          # 주최 (국가/구)
     title_list = []         # 지원사업명 (제목)
+    field_list = []         # 지원대상
     content_list = []       # 내용
     original_url_list = []  # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
+    field_text = ""         # 지원대상 텍스트
     way_text = ""           # 신청방법 텍스트
     content_text = ""       # 내용 텍스트
 
@@ -113,48 +90,26 @@ def ydp_2page_crawler(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    # h3 태그와 그 다음 ul, p, div 태그를 차례로 선택하여 정보 추출
-    h3_tags = soup.select('#contents > h3')
-    for index, h3_tag in enumerate(h3_tags):
-        try:
-            #  추출
-            temp = h3_tag.string.strip()  # h3 태그의 실제 텍스트 값 추출
-            if '신청' in temp:
-                way_text += temp + "\n"
-            else:
-                content_text += temp + "\n"
-
-            # 다음에 나오는 태그 선택
-            next_tag = h3_tag.find_next_sibling(['ul', 'p', 'div', 'table'])
-            if next_tag:
-                # 태그 내의 텍스트 추출
-                if next_tag.name == 'table':  # 만약 다음 태그가 table이라면
-                    table_df = pd.read_html(str(next_tag))[0]  # table을 데이터프레임으로 변환
-                    content_text += table_df.to_string(index=False) + "\n"  # 데이터프레임을 텍스트로 변환하여 추가
-                else:
-                    text = next_tag.get_text(strip=True)
-                    if '방문' in text or '온라인' in text:
-                        way_text += temp + "\n"
-                    else:
-                        content_text += text + "\n"
-
-        except Exception as e:
-            print(f"Error occurred while processing title {index + 1}: {e}")
-
-    # 중복된 결과값 제거
-    way_text = "\n".join(list(set(way_text.split("\n"))))
-
-    # 신청방법 및 내용 추가
-    way_list.append(way_text.strip())
-    content_list.append(content_text.strip())
-
-
     # 제목 추가
     title_text = soup.select('#colgroup > article > header > div.sub_title > h2')[0].text.strip()
     title_list.append(title_text)
 
+    # 지원대상
+    field_text = soup.select('#contents > p:nth-child(2)')[0].text.strip()
+    field_list.append(field_text)
+
+    # 내용 추가
+    content_text += soup.select('#contents > h3:nth-child(7)')[0].text.strip()
+    content_text += soup.select('#contents > ul:nth-child(8) > li:nth-child(3)')[0].text.strip()
+    content_text += soup.select('#contents > div > ul')[0].text.strip()
+    content_list.append(content_text)
+
+    # 신청방법 추가
+    way_text = soup.select('#contents > ul:nth-child(6)')[0].text.strip()
+    way_list.append(way_text)
+
     # 문의처 추가
-    etc_text = soup.select('#colgroup > article > footer > div > ul')[0].text.strip()
+    etc_text = soup.select('#contents > p:nth-child(4)')[0].text.strip()
     etc_list.append(etc_text)
 
     # 주최 및 분야, 관리자 ID, 원본 URL 추가
@@ -166,12 +121,14 @@ def ydp_2page_crawler(url):
     category = 2  # 영유아
     category_list.append(category)
 
+
     # 데이터 프레임 생성
     df = pd.DataFrame({
         'admin_id': admin_list,
         'w_category_id': category_list,
         'host_id': host_list,
         'title': title_list,
+        'field': field_list,
         'content': content_list,
         'way': way_list,
         'etc': etc_list,
@@ -194,14 +151,19 @@ def ydp_3page_crawler(url):
     category_list = []      # 카테고리 (분야)
     host_list = []          # 주최 (국가/구)
     title_list = []         # 지원사업명 (제목)
+    field_list = []         # 지원대상
     content_list = []       # 내용
     original_url_list = []  # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
+    field_text = ""         # 지원대상 텍스트
+    way_text = ""           # 신청방법 텍스트
+    content_text = ""       # 내용 텍스트
 
     # URL로부터 페이지 내용 가져오기
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
+
 
     for i in range(2):  # 2번 반복
         # 제목 추가
@@ -212,7 +174,11 @@ def ydp_3page_crawler(url):
         content_text = ''
         ul_selector = f'#contents > ul:nth-child({3 + i * 5})'
         ul_content = soup.select(ul_selector)[0].text.strip()
-        content_text += ul_content
+        if '대상' in ul_content:
+            field_text = ul_content
+            field_list.append(field_text.strip())
+        else :
+            content_text += ul_content
 
         div_selector = f'#contents > div:nth-child({5 + i * 5})'
         # div 태그가 있는지 확인하고 데이터프레임으로 저장하거나 그대로 내용을 추가
@@ -257,6 +223,7 @@ def ydp_3page_crawler(url):
         'w_category_id': category_list,
         'host_id': host_list,
         'title': title_list,
+        'field': field_list,
         'content': content_list,
         'way': way_list,
         'etc': etc_list,
@@ -272,39 +239,73 @@ def ydp_3page_crawler(url):
     return df
 
 
-# 다둥이 행복카드 안내 페이지 크롤러
-def ydp_4page_crawler(url):
+# 보육료 지원 안내 페이지 크롤러
+def ydp_2page_crawler(url):
     # 정보 담을 리스트 초기화
     admin_list = []         # 관리자 ID
     category_list = []      # 카테고리 (분야)
     host_list = []          # 주최 (국가/구)
     title_list = []         # 지원사업명 (제목)
+    field_list = []         # 지원대상
     content_list = []       # 내용
     original_url_list = []  # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
+    field_text = ""         # 지원대상 텍스트
+    way_text = ""           # 신청방법 텍스트
+    content_text = ""       # 내용 텍스트
 
     # URL로부터 페이지 내용 가져오기
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
+    # h3 태그와 그 다음 ul, p, div 태그를 차례로 선택하여 정보 추출
+    h3_tags = soup.select('#contents > h3')
+    for index, h3_tag in enumerate(h3_tags):
+        try:
+            #  추출
+            temp = h3_tag.string.strip()  # h3 태그의 실제 텍스트 값 추출
+            if '신청' in temp:
+                way_text += temp + "\n"
+            elif '지원대상' in temp:
+                field_text = ""
+            else:
+                content_text += temp + "\n"
+
+            # 다음에 나오는 태그 선택
+            next_tag = h3_tag.find_next_sibling(['ul', 'p', 'div', 'table'])
+            if next_tag:
+                # 태그 내의 텍스트 추출
+                if next_tag.name == 'table':  # 만약 다음 태그가 table이라면
+                    table_df = pd.read_html(str(next_tag))[0]  # table을 데이터프레임으로 변환
+                    content_text += table_df.to_string(index=False) + "\n"  # 데이터프레임을 텍스트로 변환하여 추가
+                else:
+                    text = next_tag.get_text(strip=True)
+                    if '방문' in text or '온라인' in text:
+                        way_text += temp + "\n"
+                    elif '아동으로' in text:
+                        field_text += text
+                    else:
+                        content_text += text + "\n"
+
+        except Exception as e:
+            print(f"Error occurred while processing title {index + 1}: {e}")
+
+    # 중복된 결과값 제거
+    way_text = "\n".join(list(set(way_text.split("\n"))))
+
+    # 지원대상, 신청방법 및 내용 추가
+    field_list.append(field_text.strip())
+    way_list.append(way_text.strip())
+    content_list.append(content_text.strip())
+
+
     # 제목 추가
     title_text = soup.select('#colgroup > article > header > div.sub_title > h2')[0].text.strip()
     title_list.append(title_text)
 
-    # 내용 추가
-    content_text = soup.select('#contents > p:nth-child(2)')[0].text.strip()
-    content_text += soup.select('#contents > h3:nth-child(7)')[0].text.strip()
-    content_text += soup.select('#contents > ul:nth-child(8) > li:nth-child(3)')[0].text.strip()
-    content_text += soup.select('#contents > div > ul')[0].text.strip()
-    content_list.append(content_text)
-
-    # 신청방법 추가
-    way_text = soup.select('#contents > ul:nth-child(6)')[0].text.strip()
-    way_list.append(way_text)
-
     # 문의처 추가
-    etc_text = soup.select('#contents > p:nth-child(4)')[0].text.strip()
+    etc_text = soup.select('#colgroup > article > footer > div > ul')[0].text.strip()
     etc_list.append(etc_text)
 
     # 주최 및 분야, 관리자 ID, 원본 URL 추가
@@ -322,6 +323,7 @@ def ydp_4page_crawler(url):
         'w_category_id': category_list,
         'host_id': host_list,
         'title': title_list,
+        'field': field_list,
         'content': content_list,
         'way': way_list,
         'etc': etc_list,
@@ -337,13 +339,14 @@ def ydp_4page_crawler(url):
     return df
 
 
-# 아동수당 지원사업 안내 페이지 크롤러
-def ydp_5page_crawler(url):
+# 출산양육지원사업안내 페이지 크롤러
+def ydp_1page_crawler(url):
     # 정보 담을 리스트 초기화
     admin_list = []         # 관리자 ID
     category_list = []      # 카테고리 (분야)
     host_list = []          # 주최 (국가/구)
     title_list = []         # 지원사업명 (제목)
+    field_list = []         # 지원대상
     content_list = []       # 내용
     original_url_list = []  # 원본 URL
     way_list = []           # 신청방법
@@ -353,33 +356,70 @@ def ydp_5page_crawler(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    # 제목 추가
-    title_text = soup.select('#colgroup > article > header > div.sub_title > h2')[0].text.strip()
-    title_list.append(title_text)
+    # h3 태그와 그 다음 ul.bu 태그를 차례로 선택하여 정보 추출
+    h3_tags = soup.select('#contents > h3')
+    for index, h3_tag in enumerate(h3_tags):
+        try:
+            # 제목 추출
+            title = h3_tag.text.strip()
+            title_list.append(title)
 
-    # 내용 추가
-    content_text = soup.select('#contents > ul:nth-child(2)')[0].text.strip()
-    content_text += soup.select('#contents > p:nth-child(6)')[0].text.strip()
-    content_text += soup.select('#contents > p:nth-child(8)')[0].text.strip()
-    content_list.append(content_text)
+            # 해당 제목 다음에 나오는 ul.bu 태그 선택
+            next_ul = h3_tag.find_next_sibling('ul', class_='bu')
+            if next_ul:
+                li_tags = next_ul.find_all('li')
+                field_text = ""  # 지원대상 텍스트
+                way_text = ""  # 신청방법 텍스트
+                etc_text = ""  # 문의처 텍스트
+                content_text = ""   # 내용 텍스트
+                for li in li_tags:
+                    text = li.text.strip()
+                    if '신청방법' in text:
+                        way_text = text.split(': ', 1)[1] if ': ' in text else 'N/A'  # ":" 이후의 텍스트만 가져오기
+                    elif '문의' in text:
+                        etc_text = text.split(': ', 1)[1] if ': ' in text else 'N/A'  # ":" 이후의 텍스트만 가져오기
+                    elif '지원대상' in text:
+                        field_text = text.split(': ', 1)[1] if ': ' in text else 'N/A'  # ":" 이후의 텍스트만 가져오기
+                    else:
+                        content_text += text + "\n"
 
-    # 신청방법 추가
-    way_text = soup.select('#contents > ul:nth-child(4)')[0].text.strip()
-    way_list.append(way_text)
+                # 지원대상, 신청방법 및 문의처, 내용 추가
+                field_list.append(field_text.strip())
+                way_list.append(way_text.strip())
+                etc_list.append(etc_text.strip())
+                content_list.append(content_text.strip())
+            else:
+                field_list.append('N/A')
+                way_list.append('N/A')
+                etc_list.append('N/A')
+                content_list.append('N/A')
 
-    # 문의처 추가
-    etc_text = soup.select('#contents > p:nth-child(10)')[0].text.strip()
-    etc_list.append(etc_text)
+            # 주최 (국가/구) 및 카테고리 (분야) 추출
+            content_ul = h3_tag.find_next_sibling('ul')
+            if content_ul:
+                text = content_ul.text.strip()
+                if text.find('영등포') != -1:
+                    host = 1156000000  # 영등포구 행정코드
+                else:
+                    host = 9000000009  # 정부 행정코드
+                host_list.append(host)
 
-    # 주최 및 분야, 관리자 ID, 원본 URL 추가
-    admin_id = 'teamwemmy@gmail.com'
-    admin_list.append(admin_id)
-    original_url_list.append(url)
-    host = 9000000009  # 정부 행정코드
-    host_list.append(host)
-    category = 2  # 영유아
-    category_list.append(category)
+                if text.find('산모') != -1:
+                    category = 1  # 임신/출산
+                else:
+                    category = 2  # 영유아
+                category_list.append(category)
+            else:
+                host_list.append('n/a')
+                category_list.append('n/a')
 
+            # 관리자 ID와 원본 URL 추가
+            admin_id = 'teamwemmy@gmail.com'
+            admin_list.append(admin_id)
+            original_url_list.append(url)
+
+        except Exception as e:
+            print(f"Error occurred while processing title {index + 1}: {e}")
 
     # 데이터 프레임 생성
     df = pd.DataFrame({
@@ -387,6 +427,7 @@ def ydp_5page_crawler(url):
         'w_category_id': category_list,
         'host_id': host_list,
         'title': title_list,
+        'field': field_list,
         'content': content_list,
         'way': way_list,
         'etc': etc_list,
@@ -458,13 +499,13 @@ import numpy as np
 # 오늘 날짜
 today = date.today()
 
-# 영등포구 복지 검색 사이트
+# 영등포구 검색 사이트
 url1 = 'https://www.ydp.go.kr/www/contents.do?key=3307&'
 url2 = 'https://www.ydp.go.kr/www/contents.do?key=3891&'
 url3 = 'https://www.ydp.go.kr/www/contents.do?key=3312&'
 url4 = 'https://www.ydp.go.kr/www/contents.do?key=3310&'
 url5 = 'https://www.ydp.go.kr/www/contents.do?key=3304&'
 
-# 영등포구 페이지 크롤링 및 저장
+# 여러 페이지 크롤링 및 저장
 urls = [url1, url2, url3, url4, url5]  # 크롤링할 페이지의 URL 리스트
 ydp_crawler(urls)
