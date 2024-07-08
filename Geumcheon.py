@@ -45,7 +45,7 @@ def geumcheon_page_crawler(soup):
             host_list.append(host)
 
             # 관리자 ID
-            admin_id = 20242024
+            admin_id = 'teamwemmy@gmail.com'
             admin_list.append(admin_id)
 
 # 세부 페이지 크롤러
@@ -71,14 +71,28 @@ def geumcheon_target_page_crawler():
 
             # 신청방법
             way_temp = soup.select('#contents > div > table > tbody > tr:nth-child(7) > td')[0].text.strip() if soup.select('#contents > div > table > tbody > tr:nth-child(7) > td') else 'N/A'
+             # 추가적인 조건: 주최가 '국가'인 경우에 대한 처리
+            host_temp = host_list[i]
+            if host_temp == 9000000009:
+              if '복지로' in way_temp:
+                  etc_temp = '보건복지상담센터(129)'
+              elif '정부24' in way_temp:
+                  etc_temp = '정부24(1588-2188)'
+              elif 'bokjiro' in way_temp:
+                  etc_temp = '보건복지상담센터(129)'
+              elif '동주민센터' in way_temp:
+                  etc_temp = '출생자의 주민등록주소지 읍면동 주민센터 문의'
+              elif '구청' in way_temp:
+                  etc_temp = '출생자의 주민등록주소지 구청 문의'
+              elif '보건소' in way_temp:
+                  etc_temp = '출생자의 주민등록주소지 관할 보건소 문의'
+              elif 'socialser' in way_temp:
+                  etc_temp = '사회서비스 콜센터(1566-3232)'
+              else:
+                  etc_temp = soup.select('#contents > div > table > tbody > tr:nth-child(8) > td')[0].text.strip() if soup.select('#contents > div > table > tbody > tr:nth-child(8) > td') else 'N/A'
+            else:
+              etc_temp = soup.select('#contents > div > table > tbody > tr:nth-child(8) > td')[0].text.strip() if soup.select('#contents > div > table > tbody > tr:nth-child(8) > td') else 'N/A'
             way_list.append(way_temp)
-
-            # 문의처
-            inquiry_temp = soup.select('#contents > div > table > tbody > tr:nth-child(8) > td')[0].text.strip() if soup.select('#contents > div > table > tbody > tr:nth-child(8) > td') else 'N/A'
-            inquiry_list.append(inquiry_temp)
-
-            # 기타
-            etc_temp = soup.select('#contents > div > table > tbody > tr:nth-child(10) > td')[0].text.strip() if soup.select('#contents > div > table > tbody > tr:nth-child(10) > td') else 'N/A'
             etc_list.append(etc_temp)
 
 
@@ -95,8 +109,7 @@ title_list = []         # 지원사업명 (제목)
 field_list = []         # 지원대상
 content_list = []       # 내용
 way_list = []           # 신청방법
-inquiry_list = []       # 문의처
-etc_list = []           # 기타
+etc_list = []           # 문의퍼
 url_list = []           # 크롤링한 세부 url
 
 # 크롤링 걸린 시간
@@ -128,7 +141,7 @@ print("---{} seconds done---".format(time.time() - tik))
 geumcheon_target_page_crawler()
 
 # 각 세부 페이지에 대해 유니크한 아이디 생성 및 추가 (10자리 숫자로 변환)
-unique_id = [(int(uuid.uuid4().int) % 10000000000) for _ in range(len(url_list))] 
+unique_id = [(int(uuid.uuid4().int) % 10000000000) for _ in range(len(url_list))]
 
 # 데이터 프레임 생성
 df = pd.DataFrame({'unique_id': unique_id,
@@ -139,7 +152,6 @@ df = pd.DataFrame({'unique_id': unique_id,
                    'field': field_list,
                    'content': content_list,
                    'way': way_list,
-                   'inquiry': inquiry_list,
                    'etc': etc_list,
                    'original_url': url_list})
 
