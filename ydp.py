@@ -7,7 +7,7 @@ def ydp_5page_crawler(url):
     title_list = []         # 지원사업명 (제목)
     field_list = []         # 지원대상
     content_list = []       # 내용
-    original_url_list = []  # 원본 URL
+    url_list = []  # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
     field_text = ""         # 지원대상 텍스트
@@ -42,7 +42,7 @@ def ydp_5page_crawler(url):
     # 주최 및 분야, 관리자 ID, 원본 URL 추가
     admin_id = 'teamwemmy@gmail.com'
     admin_list.append(admin_id)
-    original_url_list.append(url)
+    url_list.append(url)
     host = 9000000009  # 정부 행정코드
     host_list.append(host)
     category = 2  # 영유아
@@ -59,7 +59,7 @@ def ydp_5page_crawler(url):
         'content': content_list,
         'way': way_list,
         'etc': etc_list,
-        'original_url': original_url_list  # URL은 각각의 행에 해당
+        'original_url': url_list  # URL은 각각의 행에 해당
     })
 
     # 각 페이지에 대해 유니크한 아이디 생성 및 추가 (10자리 숫자로 변환)
@@ -70,6 +70,7 @@ def ydp_5page_crawler(url):
 
     return df
 
+
 # 다둥이 행복카드 안내 페이지 크롤러
 def ydp_4page_crawler(url):
     # 정보 담을 리스트 초기화
@@ -79,7 +80,7 @@ def ydp_4page_crawler(url):
     title_list = []         # 지원사업명 (제목)
     field_list = []         # 지원대상
     content_list = []       # 내용
-    original_url_list = []  # 원본 URL
+    url_list = []  # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
     field_text = ""         # 지원대상 텍스트
@@ -115,7 +116,7 @@ def ydp_4page_crawler(url):
     # 주최 및 분야, 관리자 ID, 원본 URL 추가
     admin_id = 'teamwemmy@gmail.com'
     admin_list.append(admin_id)
-    original_url_list.append(url)
+    url_list.append(url)
     host = 9000000009  # 정부 행정코드
     host_list.append(host)
     category = 2  # 영유아
@@ -132,7 +133,7 @@ def ydp_4page_crawler(url):
         'content': content_list,
         'way': way_list,
         'etc': etc_list,
-        'original_url': original_url_list  # URL은 각각의 행에 해당
+        'original_url': url_list  # URL은 각각의 행에 해당
     })
 
     # 각 페이지에 대해 유니크한 아이디 생성 및 추가 (10자리 숫자로 변환)
@@ -153,7 +154,7 @@ def ydp_3page_crawler(url):
     title_list = []         # 지원사업명 (제목)
     field_list = []         # 지원대상
     content_list = []       # 내용
-    original_url_list = []  # 원본 URL
+    url_list = []  # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
     field_text = ""         # 지원대상 텍스트
@@ -210,7 +211,7 @@ def ydp_3page_crawler(url):
         # 주최 및 분야, 관리자 ID, 원본 URL 추가
         admin_id = 'teamwemmy@gmail.com'
         admin_list.append(admin_id)
-        original_url_list.append(url)
+        url_list.append(url)
         host = 9000000009  # 정부 행정코드
         host_list.append(host)
         category = 2  # 영유아
@@ -227,7 +228,7 @@ def ydp_3page_crawler(url):
         'content': content_list,
         'way': way_list,
         'etc': etc_list,
-        'original_url': original_url_list  # URL은 각각의 행에 해당
+        'original_url': url_list  # URL은 각각의 행에 해당
     })
 
     # 각 페이지에 대해 유니크한 아이디 생성 및 추가 (10자리 숫자로 변환)
@@ -248,7 +249,7 @@ def ydp_2page_crawler(url):
     title_list = []         # 지원사업명 (제목)
     field_list = []         # 지원대상
     content_list = []       # 내용
-    original_url_list = []  # 원본 URL
+    url_list = []  # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
     field_text = ""         # 지원대상 텍스트
@@ -311,7 +312,7 @@ def ydp_2page_crawler(url):
     # 주최 및 분야, 관리자 ID, 원본 URL 추가
     admin_id = 'teamwemmy@gmail.com'
     admin_list.append(admin_id)
-    original_url_list.append(url)
+    url_list.append(url)
     host = 9000000009  # 정부 행정코드
     host_list.append(host)
     category = 2  # 영유아
@@ -327,7 +328,7 @@ def ydp_2page_crawler(url):
         'content': content_list,
         'way': way_list,
         'etc': etc_list,
-        'original_url': original_url_list  # URL은 각각의 행에 해당
+        'original_url': url_list  # URL은 각각의 행에 해당
     })
 
     # 각 페이지에 대해 유니크한 아이디 생성 및 추가 (10자리 숫자로 변환)
@@ -348,7 +349,7 @@ def ydp_1page_crawler(url):
     title_list = []         # 지원사업명 (제목)
     field_list = []         # 지원대상
     content_list = []       # 내용
-    original_url_list = []  # 원본 URL
+    url_list = []  # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
 
@@ -416,7 +417,7 @@ def ydp_1page_crawler(url):
             # 관리자 ID와 원본 URL 추가
             admin_id = 'teamwemmy@gmail.com'
             admin_list.append(admin_id)
-            original_url_list.append(url)
+            url_list.append(url)
 
         except Exception as e:
             print(f"Error occurred while processing title {index + 1}: {e}")
@@ -431,7 +432,7 @@ def ydp_1page_crawler(url):
         'content': content_list,
         'way': way_list,
         'etc': etc_list,
-        'original_url': original_url_list  # URL은 각각의 행에 해당
+        'original_url': url_list  # URL은 각각의 행에 해당
     })
 
     # 각 페이지에 대해 유니크한 아이디 생성 및 추가 (10자리 숫자로 변환)
@@ -509,3 +510,8 @@ url5 = 'https://www.ydp.go.kr/www/contents.do?key=3304&'
 # 여러 페이지 크롤링 및 저장
 urls = [url1, url2, url3, url4, url5]  # 크롤링할 페이지의 URL 리스트
 ydp_crawler(urls)
+
+
+
+
+
