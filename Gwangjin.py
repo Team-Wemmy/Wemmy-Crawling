@@ -128,7 +128,7 @@ def gj_4page_crawler(url):
     etc_list.append(etc_text)
 
     # 내용 추가
-    content_text = soup.select('#content > ul > li:nth-child(1)')[0].text.strip() + '\n'
+    content_text = '시설보육 및 가정양육 상담, 일시 보육 서비스, 장난감 대여, 교재 및 교구대여, 놀이공간 제공 등 One-stop 육아지원 서비스를 위하여 육아종합 지원센터의 운영비를 지원'
     content_list.append(content_text)
 
     # 데이터 프레임 생성
