@@ -7,7 +7,7 @@ def gj_5page_crawler(url):
     title_list = []         # 지원사업명 (제목)
     field_list = []         # 지원대상
     content_list = []       # 내용
-    url_list = []  # 원본 URL
+    url_list = []           # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
 
@@ -88,7 +88,7 @@ def gj_4page_crawler(url):
     title_list = []         # 지원사업명 (제목)
     field_list = []         # 지원대상
     content_list = []       # 내용
-    url_list = []  # 원본 URL
+    url_list = []           # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
 
@@ -162,7 +162,7 @@ def gj_3page_crawler(url):
     title_list = []         # 지원사업명 (제목)
     field_list = []         # 지원대상
     content_list = []       # 내용
-    url_list = []  # 원본 URL
+    url_list = []           # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
 
@@ -247,7 +247,7 @@ def gj_2page_crawler(url):
     title_list = []         # 지원사업명 (제목)
     field_list = []         # 지원대상
     content_list = []       # 내용
-    url_list = []  # 원본 URL
+    url_list = []           # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
 
@@ -341,7 +341,7 @@ def gj_1page_crawler(url):
     title_list = []         # 지원사업명 (제목)
     field_list = []         # 지원대상
     content_list = []       # 내용
-    url_list = []  # 원본 URL
+    url_list = []           # 원본 URL
     way_list = []           # 신청방법
     etc_list = []           # 문의처
 
@@ -470,12 +470,11 @@ today = date.today()
 url1 = 'https://gwangjin.go.kr/portal/main/contents.do?menuNo=201542'
 url2 = 'https://gwangjin.go.kr/portal/main/contents.do?menuNo=201591'
 url3 = 'https://gwangjin.go.kr/portal/main/contents.do?menuNo=201702'
-url4 = 'https://gwangjin.go.kr/portal/main/contents.do?menuNo=200303'
+url4 = 'https://www.gjcare.go.kr/'
 url5 = 'https://gwangjin.go.kr/portal/bbs/B0000178/view.do?optn3=200309&nttId=215821&searchGnrlzWlfare1=01&searchGnrlzWlfare2=038&menuNo=200301&pageIndex=2'
 
 # 여러 페이지 크롤링 및 저장
 urls = [url1, url2, url3, url4, url5]  # 크롤링할 페이지의 URL 리스트
-gj_crawler(urls)  
-
+gj_crawler(urls)
 
 
