@@ -198,8 +198,7 @@ def gj_3page_crawler(url):
     way_list.append(way_text)
 
     # 문의 추가
-    etc_text = soup.select('#cmi-deptKorNm')[0].text.strip() + '\t'
-    etc_text += soup.select('#cmi-userTelno')[0].text.strip()
+    etc_text = '동작구청 영유아보육과(02-820-9731)'
     etc_list.append(etc_text)
 
     # 내용 추가
